@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
-
 import { CormorantG, Satoshi } from './fonts'
+import Header from '@/app/components/header/components'
 
 export const metadata: Metadata = {
 	title: 'Role Mentor',
@@ -18,6 +18,7 @@ export default function RootLayout({
 			<body
 				className={`${CormorantG.variable} ${Satoshi.variable} antialiased`}
 			>
+				<Header />
 				{children}
 			</body>
 		</html>

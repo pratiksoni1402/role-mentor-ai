@@ -6,19 +6,19 @@ import { FAQ } from '@/app/home/components/faq'
 export default function Homepage() {
 	return (
 		<>
-			<div>
+			<div className="mb-10">
 				<Hero />
 			</div>
-			<div>
+			<div className="mb-10">
 				<WhatYouGet />
 			</div>
-			<div>
+			<div className="mb-10">
 				<RoleBasedLearning />
 			</div>
-			<div>
+			<div className="mb-10">
 				<Curriculum />
 			</div>
-			<div>
+			<div className="mb-10">
 				<FAQ />
 			</div>
 		</>

@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 
 // Assuming getSession and getSessionId are custom utility functions.
 // Make sure they are correctly implemented to handle session creation.
-import { getSession, getSessionId } from '@/lib/session'
+// import { getSession, getSessionId } from '@/lib/session'
 
 export async function POST(req: Request) {
 	try {
@@ -36,23 +36,13 @@ export async function POST(req: Request) {
 		// --- Password Hashing ---
 		const hashedPassword = await bcrypt.hash(password, 10)
 
-		// --- Session Creation (Placeholder) ---
-		// Ensure your session logic is robust.
-		const session = await getSession()
-		const sessionId = await getSessionId() // This should ideally be a secure, unique identifier.
-
-		session.id = sessionId
-		await session.save()
-
 		// --- Create User in Database ---
 		const newUser = await prisma.user.create({
 			data: {
 				firstName,
 				lastName,
 				email,
-				password: hashedPassword, // Always store the hashed password.
-				sessionId,
-				sessionEmail: email, // Consider if this field is redundant.
+				password: hashedPassword,
 			},
 			// Select only the fields you need to return for security and efficiency.
 			select: {

@@ -56,38 +56,7 @@ export function Hero() {
 						See curriculum
 					</Link>
 				</motion.div>
-
-				<motion.div
-					initial={{ opacity: 0, y: 12 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-					className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-6"
-				>
-					<Logo src="/partner-logo-1.png" alt="Partner logo 1" />
-					<Logo src="/partner-logo-2.png" alt="Partner logo 2" />
-					<Logo
-						src="/partner-logo-abstract-geometric.png"
-						alt="Partner logo 3"
-					/>
-					<Logo
-						src="/partner-logo-abstract-geometric.png"
-						alt="Partner logo 4"
-					/>
-				</motion.div>
 			</div>
 		</header>
-	)
-}
-
-function Logo({ src, alt }: { src: string; alt: string }) {
-	return (
-		<img
-			src={src || '/placeholder.svg'}
-			alt={alt}
-			className="h-6 w-auto opacity-80"
-			loading="lazy"
-			height={24}
-			width={120}
-		/>
 	)
 }

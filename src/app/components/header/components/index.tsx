@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-
-export default function Header() {
+// import { getSessionId } from '@/lib/session'
+export default async function Header() {
+	// const sessionId = await getSessionId()
 	return (
-		<header className="w-full border-b bg-background">
-			<div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:py-4">
+		<header className="w-full border-b sticky top-0 bg-white z-10">
+			<div className=" flex w-full items-center justify-between px-4 py-3 md:py-4">
 				{/* Brand: AI Role Mentor */}
 				<Link
 					href="/"
@@ -19,8 +20,8 @@ export default function Header() {
 				{/* Right-side actions */}
 				<nav aria-label="Primary" className="flex items-center gap-2">
 					<Button asChild size="sm">
-						<Link href="/auth" aria-label="Go to authentication">
-							Sign in / Sign up
+						<Link href="/dashboard" aria-label="Go to authentication">
+							Go to Dashboard
 						</Link>
 					</Button>
 				</nav>

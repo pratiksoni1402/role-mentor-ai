@@ -1,5 +1,3 @@
-// /dashboard/components/roles/api/tutorial-generation/route.ts
-
 import { NextResponse, NextRequest } from 'next/server'
 import OpenAI from 'openai'
 
@@ -7,9 +5,37 @@ const client = new OpenAI({
 	apiKey: process.env.OPENAI_KEY,
 })
 
+// Define types
+interface EvaluationResult {
+	question: string
+	userAnswer: string
+	correctAnswer: string
+}
+
+interface Evaluation {
+	score: number
+	results: EvaluationResult[]
+	experienceLevel: string
+	summary: string
+}
+
+interface TutorialQuestion {
+	question: string
+	options: string[]
+	correctAnswer: string
+	explanation: string
+}
+
+interface TutorialResponse {
+	tutorialQuestions: TutorialQuestion[]
+	fallback?: string
+}
+
 export async function POST(request: NextRequest) {
 	try {
-		const { role, evaluation } = await request.json()
+		const { role, evaluation }: { role: string; evaluation: Evaluation } =
+			await request.json()
+
 		if (!role || !evaluation) {
 			return NextResponse.json(
 				{ error: 'Role and evaluation are required' },
@@ -17,8 +43,6 @@ export async function POST(request: NextRequest) {
 			)
 		}
 
-		// The user prompt is cleaner without the JSON formatting instructions,
-		// as we now handle that with API parameters.
 		const userPrompt = `
       A user with role "${role}" completed a quiz with the following evaluation:
 
@@ -28,7 +52,7 @@ export async function POST(request: NextRequest) {
       Detailed Results:
       ${evaluation.results
 				.map(
-					(r: any, idx: number) =>
+					(r, idx) =>
 						`Q${idx + 1}: ${r.question}\nYour Answer: ${r.userAnswer}\nCorrect Answer: ${r.correctAnswer}`
 				)
 				.join('\n')}
@@ -41,7 +65,6 @@ export async function POST(request: NextRequest) {
 
 		const completion = await client.chat.completions.create({
 			model: 'gpt-4o-mini',
-			// ✨ 1. ADD A SYSTEM MESSAGE FOR CLEAR INSTRUCTIONS
 			messages: [
 				{
 					role: 'system',
@@ -50,26 +73,22 @@ export async function POST(request: NextRequest) {
 				},
 				{ role: 'user', content: userPrompt },
 			],
-			// ✨ 2. ENFORCE JSON MODE
 			response_format: { type: 'json_object' },
 			max_completion_tokens: 2000,
 		})
 
 		const tutorialRaw = completion.choices[0].message?.content || ''
 
-		// With JSON mode, this parsing is much more reliable.
-		// The fallback logic is still good practice.
-		let tutorial: any = null
+		let tutorial: TutorialResponse
 		try {
-			tutorial = JSON.parse(tutorialRaw)
+			tutorial = JSON.parse(tutorialRaw) as TutorialResponse
 		} catch (err) {
 			console.warn('Failed to parse AI JSON despite JSON mode:', err)
-			// The fallback correctly sends the raw string to the frontend for debugging.
 			tutorial = { tutorialQuestions: [], fallback: tutorialRaw }
 		}
 
 		return NextResponse.json({ tutorial })
-	} catch (error: any) {
+	} catch (error: unknown) {
 		console.error('OpenAI API Error:', error)
 		return NextResponse.json(
 			{ error: 'Failed to generate tutorial' },

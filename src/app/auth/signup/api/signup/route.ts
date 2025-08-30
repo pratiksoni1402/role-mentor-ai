@@ -63,7 +63,7 @@ export async function POST(req: Request) {
 
 		// --- Success Response ---
 		return NextResponse.json({ ok: true, user: newUser }, { status: 201 })
-	} catch (err: any) {
+	} catch (err: unknown) {
 		// --- General Error Handling ---
 		console.error('Signup API Error:', err)
 		return NextResponse.json(
